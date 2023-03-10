@@ -162,7 +162,7 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
     });
-    app.post('/collectOrder',verifyToken, async (req, res) => {
+    app.post('/collectOrder', async (req, res) => {
       const order = req.body;
       const query = { email: order.email, product: order.product, date: order.date, productId: order.productId };
       const exist = await orderCollection.findOne(query);
