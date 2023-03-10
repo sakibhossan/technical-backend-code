@@ -66,7 +66,7 @@ async function run() {
       res.send({ result, token });
 
     });
-    app.put('/user/admin/:email',verifyToken,  async (req, res) => {
+    app.put('/user/admin/:email',  async (req, res) => {
       const email = req.params.email;
       const requesterAdmin = req.decoded.email;
       const requesterAdminAccount = await userCollection.findOne({ email: requesterAdmin });
@@ -123,7 +123,7 @@ async function run() {
       const user = await userCollection.find().toArray();
       res.send(user);
     })
-    app.get('/collectOrder',  async (req, res) => {
+    app.get('/collectOrder',verifyToken,  async (req, res) => {
 
       const email = req.query.email;
       const decodedEmail = req.decoded.email;
@@ -162,7 +162,7 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
     });
-    app.post('/collectOrder', async (req, res) => {
+    app.post('/collectOrder',verifyToken, async (req, res) => {
       const order = req.body;
       const query = { email: order.email, product: order.product, date: order.date, productId: order.productId };
       const exist = await orderCollection.findOne(query);
