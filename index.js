@@ -52,7 +52,7 @@ async function run() {
 
 
     // json web token
-    app.put('/user/:email', async (req, res) => {
+    app.put('/user/:email',verifyToken, async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       const filter = { email: email };
@@ -88,7 +88,7 @@ async function run() {
 
 
     });
-    app.patch('/collectOrder/:id', async (req, res) => {
+    app.patch('/collectOrder/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
       const filter = { _id: ObjectId(id) };
@@ -105,7 +105,7 @@ async function run() {
     })
 
 
-    app.get('/products', async (req, res) => {
+    app.get('/products',verifyToken, async (req, res) => {
       const query = {};
       const cursor = productsCollection.find(query);
       const products = await cursor.toArray();
@@ -119,7 +119,7 @@ async function run() {
 
     });
 
-    app.get('/user', async (req, res) => {
+    app.get('/user',verifyToken, async (req, res) => {
       const user = await userCollection.find().toArray();
       res.send(user);
     })
@@ -137,32 +137,32 @@ async function run() {
         res.status(403).send({ message: 'Forbidden Access' })
       }
     })
-    app.get('/products/:id', async (req, res) => {
+    app.get('/products/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const product = await productsCollection.findOne(query);
       res.send(product);
 
     });
-    app.get('/collectOrder/:id', async (req, res) => {
+    app.get('/collectOrder/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const paymentProduct = await orderCollection.findOne(query);
       res.send(paymentProduct);
     });
-    app.get('/admin/:email', async (req, res) => {
+    app.get('/admin/:email',verifyToken, async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
       const isAdmin = user.role === 'admin';
       res.send({ admin: isAdmin });
     })
 
-    app.post('/products', async (req, res) => {
+    app.post('/products',verifyToken, async (req, res) => {
       const newProduct = req.body;
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
     });
-    app.post('/collectOrder', async (req, res) => {
+    app.post('/collectOrder',verifyToken, async (req, res) => {
       const order = req.body;
       const query = { email: order.email, product: order.product, date: order.date, productId: order.productId };
       const exist = await orderCollection.findOne(query);
@@ -189,7 +189,7 @@ async function run() {
       res.send({ clientSecret: paymentIntent.client_secret, })
     });
     // --------Manage Product Delete-------//  
-    app.delete('/products/:id', async (req, res) => {
+    app.delete('/products/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
