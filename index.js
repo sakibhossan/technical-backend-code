@@ -19,7 +19,7 @@ app.use(express.json());
 function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).send({ message: 'Aunathorized Access' })
+    return res.status(401).send({ message: 'Unathorized Access' })
   }
   const token = authHeader.split(' ')[1];
   jwt.verify(token, process.env.ACESS_TOKEN, (err, decoded) => {
@@ -88,7 +88,7 @@ async function run() {
 
 
     });
-    app.patch('/collectOrder/:id',verifyToken,async (req, res) => {
+    app.patch('/collectOrder/:id',async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
       const filter = { _id: ObjectId(id) };
@@ -144,7 +144,7 @@ async function run() {
       res.send(product);
 
     });
-    app.get('/collectOrder/:id',verifyToken, async (req, res) => {
+    app.get('/collectOrder/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const paymentProduct = await orderCollection.findOne(query);
@@ -195,7 +195,7 @@ async function run() {
       const result = await productsCollection.deleteOne(query);
       res.send(result);
     })
-    app.delete('/collectOrder/:id',verifyToken, async (req, res) => {
+    app.delete('/collectOrder/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orderCollection.deleteOne(query);
