@@ -52,7 +52,7 @@ async function run() {
 
 
     // json web token
-    app.put('/user/:email', async (req, res) => {
+    app.put('/user/:email',verifyToken, async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       const filter = { email: email };
@@ -66,7 +66,7 @@ async function run() {
       res.send({ result, token });
 
     });
-    app.put('/user/admin/:email',  async (req, res) => {
+    app.put('/user/admin/:email',verifyToken,  async (req, res) => {
       const email = req.params.email;
       const requesterAdmin = req.decoded.email;
       const requesterAdminAccount = await userCollection.findOne({ email: requesterAdmin });
@@ -88,7 +88,7 @@ async function run() {
 
 
     });
-    app.patch('/collectOrder/:id',async (req, res) => {
+    app.patch('/collectOrder/:id',verifyToken,async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
       const filter = { _id: ObjectId(id) };
@@ -111,7 +111,7 @@ async function run() {
       const products = await cursor.toArray();
       res.send(products);
     });
-    app.get('/payment', async (req, res) => {
+    app.get('/payment',verifyToken, async (req, res) => {
       const query = {};
       const cursor = paymentCollection.find(query);
       const paymentProduct = await cursor.toArray();
@@ -119,11 +119,11 @@ async function run() {
 
     });
 
-    app.get('/user', async (req, res) => {
+    app.get('/user',verifyToken, async (req, res) => {
       const user = await userCollection.find().toArray();
       res.send(user);
     })
-    app.get('/collectOrder',  async (req, res) => {
+    app.get('/collectOrder',verifyToken,  async (req, res) => {
 
       const email = req.query.email;
       const decodedEmail = req.decoded.email;
@@ -144,13 +144,13 @@ async function run() {
       res.send(product);
 
     });
-    app.get('/collectOrder/:id', async (req, res) => {
+    app.get('/collectOrder/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const paymentProduct = await orderCollection.findOne(query);
       res.send(paymentProduct);
     });
-    app.get('/admin/:email', async (req, res) => {
+    app.get('/admin/:email',verifyToken, async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
       const isAdmin = user.role === 'admin';
@@ -162,7 +162,7 @@ async function run() {
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
     });
-    app.post('/collectOrder', async (req, res) => {
+    app.post('/collectOrder',verifyToken, async (req, res) => {
       const order = req.body;
       const query = { email: order.email, product: order.product, date: order.date, productId: order.productId };
       const exist = await orderCollection.findOne(query);
@@ -173,7 +173,7 @@ async function run() {
       const result = await orderCollection.insertOne(order);
       return res.send({ success: true, result });
     });
-    app.post('/create-payment-intent',  async (req, res) => {
+    app.post('/create-payment-intent',verifyToken,  async (req, res) => {
       const serviceCharge = req.body;
       const price = serviceCharge.price;
 
@@ -195,7 +195,7 @@ async function run() {
       const result = await productsCollection.deleteOne(query);
       res.send(result);
     })
-    app.delete('/collectOrder/:id', async (req, res) => {
+    app.delete('/collectOrder/:id',verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orderCollection.deleteOne(query);
