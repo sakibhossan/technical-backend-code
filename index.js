@@ -52,7 +52,7 @@ async function run() {
 
 
     // json web token
-    app.put('/user/:email',verifyToken, async (req, res) => {
+    app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       const filter = { email: email };
