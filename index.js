@@ -111,7 +111,7 @@ async function run() {
       const products = await cursor.toArray();
       res.send(products);
     });
-    app.get('/payment',verifyToken, async (req, res) => {
+    app.get('/payment', async (req, res) => {
       const query = {};
       const cursor = paymentCollection.find(query);
       const paymentProduct = await cursor.toArray();
@@ -119,11 +119,11 @@ async function run() {
 
     });
 
-    app.get('/user',verifyToken, async (req, res) => {
+    app.get('/user', async (req, res) => {
       const user = await userCollection.find().toArray();
       res.send(user);
     })
-    app.get('/collectOrder',verifyToken,  async (req, res) => {
+    app.get('/collectOrder',  async (req, res) => {
 
       const email = req.query.email;
       const decodedEmail = req.decoded.email;
@@ -150,7 +150,7 @@ async function run() {
       const paymentProduct = await orderCollection.findOne(query);
       res.send(paymentProduct);
     });
-    app.get('/admin/:email',verifyToken, async (req, res) => {
+    app.get('/admin/:email', async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
       const isAdmin = user.role === 'admin';
@@ -173,7 +173,7 @@ async function run() {
       const result = await orderCollection.insertOne(order);
       return res.send({ success: true, result });
     });
-    app.post('/create-payment-intent',verifyToken,  async (req, res) => {
+    app.post('/create-payment-intent',  async (req, res) => {
       const serviceCharge = req.body;
       const price = serviceCharge.price;
 
@@ -189,7 +189,7 @@ async function run() {
       res.send({ clientSecret: paymentIntent.client_secret, })
     });
     // --------Manage Product Delete-------//  
-    app.delete('/products/:id',verifyToken, async (req, res) => {
+    app.delete('/products/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
