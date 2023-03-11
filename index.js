@@ -111,7 +111,7 @@ async function run() {
       const products = await cursor.toArray();
       res.send(products);
     });
-    app.get('/payment', async (req, res) => {
+    app.get('/payment',verifyToken, async (req, res) => {
       const query = {};
       const cursor = paymentCollection.find(query);
       const paymentProduct = await cursor.toArray();
