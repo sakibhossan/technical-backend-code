@@ -119,7 +119,7 @@ async function run() {
 
     });
 
-    app.get('/user', async (req, res) => {
+    app.get('/user',verifyToken, async (req, res) => {
       const user = await userCollection.find().toArray();
       res.send(user);
     })
